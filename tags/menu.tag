@@ -1,30 +1,42 @@
-<x-hmenu>
+<!--
+
+Example::
+
+  riot.mount('x-menu-bar', { items: [
+    {title: 'Home', href: "/"}
+  }]
+-->
+<x-menu-bar>
   <script>
-  /**
-   * Provide a collapsed menu by default, suitable for small screen
-   */
   var self = this
   this.isActive = (window.innerWidth || document.body.clientWidth) <= 480
-  this.menuToggle = function() {
-    require(['dom'], function(dom) {
+  
+  require(['base'], function(dom) {
+    self.menuToggle = function() {
       dom.toggle(self.nav)
-    })
-  }
+    }
+  })
+
   </script>
 
   <nav name="nav" hide={ isActive }>
-    <a each={ item in opts.items } href={ item.href }>
-      { item.title }
-    </a>
+    <div each={ item in opts.items }>
+      <a if={ item.href } href={ item.href }>
+        { item.title }
+      </a>
+      <span if={ item.handler } onclick={ item.handler }>
+        { item.title }
+      </span>
+    </div>
   </nav>
   <toggle onclick={ menuToggle } show={ isActive }>
     <!-- Small screen menu button -->
     <svg width="24" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
       Menu
       <g>
-      <rect stroke="#000" height="3" width="24" y="0" x="0" fill="#000"/>
-      <rect stroke="#000" height="3" width="24" y="8" x="0" fill="#000"/>
-      <rect stroke="#000" height="3" width="24" y="16" x="0" fill="#000"/>
+      <rect height="3" width="24" y="0" x="0" fill="#000"/>
+      <rect height="3" width="24" y="8" x="0" fill="#000"/>
+      <rect height="3" width="24" y="16" x="0" fill="#000"/>
       </g>
     </svg>
   </toggle>
@@ -34,7 +46,10 @@
     display: block;
     font-family: sans-serif;
   }
-  a {
+  nav>div {
+    display: inline-block;
+  }
+  nav a, nav span {
     display: inline-block;
     padding: 4pt 8pt;
     margin: 0.5pt;
@@ -76,4 +91,4 @@
   </style>
 
   <yield/>
-</x-hmenu>
+</x-menu-bar>
